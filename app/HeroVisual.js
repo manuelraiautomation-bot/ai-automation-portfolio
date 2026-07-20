@@ -120,8 +120,10 @@ export default function HeroVisual() {
         />
 
         {/* portrait */}
-        <div className="heroPortraitFrame">
-          <img src="/images/manuel.jpg" alt="Manuel Rebutido" className="heroPortrait" />
+        <div className="heroPortraitPos">
+          <div className="heroPortraitFrame">
+            <img src="/images/manuel.jpg" alt="Manuel Rebutido" className="heroPortrait" />
+          </div>
         </div>
 
         {/* orbiting tool icons: n8n, Zapier, Make */}
