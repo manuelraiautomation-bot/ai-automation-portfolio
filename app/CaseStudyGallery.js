@@ -98,6 +98,7 @@ const caseStudies = [
 
 const colors = {
   bg: "#0b0f19",
+  imgBg: "#05070c",
   card: "#131a2a",
   border: "#232c3f",
   borderHover: "#3a4762",
@@ -157,24 +158,34 @@ export default function CaseStudyGallery() {
               (e.currentTarget.style.borderColor = colors.border)
             }
           >
-            <div style={{ position: "relative", height: "144px", width: "100%", overflow: "hidden" }}>
+            <div
+              style={{
+                position: "relative",
+                height: "160px",
+                width: "100%",
+                overflow: "hidden",
+                background: colors.imgBg,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <img
                 src={cs.image}
                 alt={cs.title}
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "top",
+                  objectFit: "contain",
                   display: "block",
                 }}
               />
               <span
                 style={{
                   position: "absolute",
-                  bottom: "12px",
-                  left: "12px",
-                  background: "rgba(30,41,59,0.9)",
+                  bottom: "8px",
+                  left: "8px",
+                  background: "rgba(19,26,42,0.9)",
                   color: colors.textDim,
                   fontSize: "10px",
                   letterSpacing: "0.5px",
@@ -221,17 +232,28 @@ export default function CaseStudyGallery() {
               background: colors.card,
               border: `1px solid ${colors.border}`,
               borderRadius: "12px",
-              maxWidth: "640px",
+              maxWidth: "680px",
               width: "100%",
-              maxHeight: "85vh",
+              maxHeight: "90vh",
               overflowY: "auto",
             }}
           >
-            <img
-              src={active.image}
-              alt={active.title}
-              style={{ width: "100%", height: "192px", objectFit: "cover", objectPosition: "top" }}
-            />
+            <div
+              style={{
+                width: "100%",
+                background: colors.imgBg,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "12px",
+              }}
+            >
+              <img
+                src={active.image}
+                alt={active.title}
+                style={{ width: "100%", height: "auto", maxHeight: "320px", objectFit: "contain" }}
+              />
+            </div>
             <div style={{ padding: "24px" }}>
               <span style={{ color: colors.textDim, fontSize: "10px", letterSpacing: "0.5px", fontFamily: "monospace" }}>
                 {active.tags.join(" · ")}
