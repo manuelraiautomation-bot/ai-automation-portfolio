@@ -2,6 +2,7 @@ import CaseStudyGallery from "./CaseStudyGallery";
 import HowItWorksVisual from "./HowItWorksVisual";
 import HeroVisual from "./HeroVisual";
 import HeroRotator from "./HeroRotator";
+import NavBar from "./NavBar";
 
 const PROFILE = {
   initials: "MR",
@@ -114,19 +115,10 @@ const FOOTER_LINKS = [
 export default function Home() {
   return (
     <main className="page">
-      <div className="container">
-        <nav className="nav">
-          <a className="navBrand" href="#top">
-            <span className="navDot" aria-hidden="true" />
-            {PROFILE.name}
-          </a>
-          <div className="navLinks">
-            <a href="#about">About</a>
-            <a href="#services">Services</a>
-            <a href="#how-it-works">Process</a>
-            <a href="#book">Contact</a>
-          </div>
-        </nav>
+      <div className="navWrap">
+        <div className="container">
+          <NavBar name={PROFILE.name} />
+        </div>
       </div>
 
       {/* Hero */}
@@ -145,9 +137,20 @@ export default function Home() {
                   {HERO.secondaryCta.label}
                 </a>
               </div>
-              <div className="heroStatus">
-                <span className="statusDot" aria-hidden="true" />
-                Currently taking on new automation projects
+              <div className="heroMeta">
+                <span className="heroMetaItem">
+                  <span className="statusDot" aria-hidden="true" />
+                  Currently taking on new automation projects
+                </span>
+                <span className="heroMetaDivider" aria-hidden="true" />
+                <span className="heroMetaItem">
+                  <span className="heroMetaIcon" aria-hidden="true">⚡</span>
+                  Automation running <strong>24/7</strong>
+                </span>
+                <span className="heroMetaDivider" aria-hidden="true" />
+                <span className="heroMetaItem">
+                  <strong>240+</strong> hours saved / client / mo
+                </span>
               </div>
             </div>
             <HeroVisual />

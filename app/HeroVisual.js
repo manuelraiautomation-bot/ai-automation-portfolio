@@ -163,25 +163,6 @@ export default function HeroVisual() {
           ))}
         </div>
 
-        {/* floating info badges */}
-        <div className="heroBadge heroBadge--tool">
-          <span className="heroBadgeIcon" aria-hidden="true">⚡</span>
-          <span className="heroBadgeText">
-            <strong>Automation</strong>
-            <small>Running 24/7</small>
-          </span>
-        </div>
-
-        <div className="heroBadge heroBadge--stat">
-          <small className="heroStatLabel">Hours saved</small>
-          <strong className="heroStatValue">240+</strong>
-          <small className="heroStatSub">per client / mo</small>
-        </div>
-
-        <div className="heroBadge heroBadge--status">
-          <span className="statusDot" aria-hidden="true" />
-          Open to work
-        </div>
       </div>
     </div>
   );
