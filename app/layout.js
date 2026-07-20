@@ -1,8 +1,9 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Alex Rivera — AI Automation",
-  description: "AI automation systems for founders who'd rather build than babysit spreadsheets.",
+  title: "Manuel Rebutido — Tech VA & AI Automation Specialist",
+  description:
+    "Tech VA and AI Automation Specialist based in Quezon City, Philippines. AI workflow automation, Telegram bots, and CRM systems built around real business outcomes.",
 };
 
 export default function RootLayout({ children }) {

@@ -433,6 +433,145 @@ body {
   box-shadow: 0 0 0 1px rgba(242, 169, 59, 0.08), 0 12px 30px -12px rgba(242, 169, 59, 0.25);
 }
 
+/* Case study gallery */
+
+.caseCard {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.caseCard:hover {
+  border-color: rgba(242, 169, 59, 0.4);
+  transform: translateY(-2px);
+}
+
+.caseCard:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+.caseThumb {
+  height: 120px;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px 16px;
+}
+
+.caseThumbLabel {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(11, 15, 23, 0.75);
+  background: rgba(255, 255, 255, 0.55);
+  padding: 4px 9px;
+  border-radius: 6px;
+}
+
+.caseCardBody {
+  padding: 20px 22px 22px;
+}
+
+.caseCardLink {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cyan);
+}
+
+/* Modal */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 8, 13, 0.78);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 100;
+}
+
+.modal {
+  width: 100%;
+  max-width: 620px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  position: relative;
+}
+
+.modalClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(11, 15, 23, 0.6);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.modalClose:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.modalThumb {
+  height: 160px;
+  border-radius: 18px 18px 0 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 16px 24px;
+}
+
+.modalBody {
+  padding: 28px 28px 32px;
+}
+
+.modalSection {
+  margin-bottom: 22px;
+}
+
+.modalSection:last-child {
+  margin-bottom: 0;
+}
+
+.modalSectionLabel {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin: 0 0 8px;
+}
+
+.modalSectionText {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0;
+}
+
 /* Footer */
 
 .footer {
