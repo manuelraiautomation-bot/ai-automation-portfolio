@@ -272,11 +272,29 @@ body {
 /* Hero visual */
 
 .heroVisual {
+  --orbit-size: 220px;
+  --orbit-radius: 78px;
+  --tool-size: 40px;
   position: relative;
-  width: 100%;
-  max-width: 320px;
-  aspect-ratio: 1 / 1;
+  width: var(--orbit-size);
+  height: var(--orbit-size);
   margin: 0 auto;
+}
+
+@media (min-width: 480px) {
+  .heroVisual {
+    --orbit-size: 260px;
+    --orbit-radius: 94px;
+    --tool-size: 46px;
+  }
+}
+
+@media (min-width: 900px) {
+  .heroVisual {
+    --orbit-size: 300px;
+    --orbit-radius: 112px;
+    --tool-size: 52px;
+  }
 }
 
 .heroOrbitInner {
@@ -365,14 +383,6 @@ body {
   color: var(--text);
 }
 
-.heroBadge--tag {
-  top: 46%;
-  left: -16%;
-  font-weight: 600;
-  color: var(--amber);
-  border-color: rgba(242, 169, 59, 0.4);
-}
-
 .heroBadge--status {
   bottom: -4%;
   left: 50%;
@@ -385,13 +395,10 @@ body {
     padding: 6px 9px;
   }
   .heroBadge--tool {
-    right: -2%;
+    right: -4%;
   }
   .heroBadge--stat {
-    left: -6%;
-  }
-  .heroBadge--tag {
-    left: -6%;
+    left: -8%;
   }
 }
 
