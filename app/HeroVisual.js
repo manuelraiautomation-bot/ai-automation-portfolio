@@ -1,9 +1,9 @@
 "use client";
 
 const TOOLS = [
-  { label: "n8n", color: "#ea4b71", angle: -90, icon: "n8n" },
-  { label: "Zapier", color: "#ff4a00", angle: 30, icon: "zapier" },
-  { label: "Make", color: "#6d00cc", angle: 150, icon: "make" },
+  { label: "n8n", color: "#ea4b71", angle: -90, icon: "n8n", radiusOffset: 0 },
+  { label: "Zapier", color: "#ff4a00", angle: 30, icon: "zapier", radiusOffset: -6 },
+  { label: "Make", color: "#6d00cc", angle: 150, icon: "make", radiusOffset: -6 },
 ];
 
 function ToolIcon({ icon, color }) {
@@ -137,10 +137,15 @@ export default function HeroVisual() {
                 left: "50%",
                 width: 0,
                 height: 0,
-                transform: `rotate(${tool.angle}deg) translateX(var(--orbit-radius))`,
+                transform: `rotate(${tool.angle}deg) translateX(calc(var(--orbit-radius) + ${tool.radiusOffset}px))`,
               }}
             >
-              <div style={{ transform: `translate(-50%, -50%) rotate(${-tool.angle}deg)` }}>
+              <div
+                style={{
+                  position: "relative",
+                  transform: `translate(-50%, -50%) rotate(${-tool.angle}deg)`,
+                }}
+              >
                 <div
                   className="heroToolBadge"
                   title={tool.label}
@@ -158,6 +163,21 @@ export default function HeroVisual() {
                 >
                   <ToolIcon icon={tool.icon} color={tool.color} />
                 </div>
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "calc(100% + 6px)",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "10px",
+                    letterSpacing: "0.04em",
+                    color: tool.color,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {tool.label}
+                </span>
               </div>
             </div>
           ))}
