@@ -1,5 +1,7 @@
 import CaseStudyGallery from "./CaseStudyGallery";
 import HowItWorksVisual from "./HowItWorksVisual";
+import HeroVisual from "./HeroVisual";
+import HeroRotator from "./HeroRotator";
 
 const PROFILE = {
   initials: "MR",
@@ -10,7 +12,9 @@ const PROFILE = {
 const HERO = {
   headline: (
     <>
-      Automation systems built by a <span className="accent">strategic partner</span>, not just a VA.
+      Eliminate your <span className="accent"><HeroRotator /></span>
+      <br />
+      with AI automation.
     </>
   ),
   sub: "I'm Manuel — a Tech VA and AI Automation Specialist based in Quezon City, Philippines, with 7 years of experience turning repetitive work into systems that run themselves. I speak business outcomes, not just tools: time saved, leads captured, replies handled.",
@@ -128,22 +132,25 @@ export default function Home() {
       {/* Hero */}
       <section className="section hero" id="top">
         <div className="container">
-          <p className="eyebrow" style={{ textAlign: "center" }}>
-            {PROFILE.eyebrow} · Quezon City, PH
-          </p>
-          <h1 className="heroHeadline">{HERO.headline}</h1>
-          <p className="heroSub">{HERO.sub}</p>
-          <div className="heroActions">
-            <a className="btnPrimary" href={HERO.primaryCta.href} target="_blank" rel="noopener noreferrer">
-              {HERO.primaryCta.label}
-            </a>
-            <a className="btnSecondary" href={HERO.secondaryCta.href}>
-              {HERO.secondaryCta.label}
-            </a>
-          </div>
-          <div className="heroStatus">
-            <span className="statusDot" aria-hidden="true" />
-            Currently taking on new automation projects
+          <div className="heroGrid">
+            <div className="heroCopy">
+              <p className="eyebrow">{PROFILE.eyebrow} · Quezon City, PH</p>
+              <h1 className="heroHeadline">{HERO.headline}</h1>
+              <p className="heroSub">{HERO.sub}</p>
+              <div className="heroActions">
+                <a className="btnPrimary" href={HERO.primaryCta.href} target="_blank" rel="noopener noreferrer">
+                  {HERO.primaryCta.label}
+                </a>
+                <a className="btnSecondary" href={HERO.secondaryCta.href}>
+                  {HERO.secondaryCta.label}
+                </a>
+              </div>
+              <div className="heroStatus">
+                <span className="statusDot" aria-hidden="true" />
+                Currently taking on new automation projects
+              </div>
+            </div>
+            <HeroVisual />
           </div>
         </div>
       </section>
