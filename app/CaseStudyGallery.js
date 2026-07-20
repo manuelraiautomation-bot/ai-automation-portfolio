@@ -112,22 +112,7 @@ export default function CaseStudyGallery() {
   const [active, setActive] = useState(null);
 
   return (
-    <section style={{ width: "100%" }}>
-      <p
-        style={{
-          color: colors.accent,
-          fontSize: "12px",
-          letterSpacing: "2px",
-          fontFamily: "monospace",
-          marginBottom: "8px",
-        }}
-      >
-        SELECTED WORK
-      </p>
-      <p style={{ color: colors.textDim, marginBottom: "32px" }}>
-        Click any project to see the pain point it solved and the result.
-      </p>
-
+    <section style={{ width: "100%", marginTop: "32px" }}>
       <div
         style={{
           display: "grid",
