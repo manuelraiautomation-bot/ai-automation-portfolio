@@ -1,188 +1,312 @@
 "use client";
 
-const TOOLS = [
-  { label: "n8n", color: "#ea4b71", angle: -90, icon: "n8n", radiusOffset: 0 },
-  { label: "Zapier", color: "#ff4a00", angle: 30, icon: "zapier", radiusOffset: -6 },
-  { label: "Make", color: "#6d00cc", angle: 150, icon: "make", radiusOffset: -6 },
+import { useEffect, useRef, useState } from "react";
+
+const STATS = [
+  { label: "Tasks automated", target: 1240, suffix: "+" },
+  { label: "Hours saved / week", target: 38, suffix: "" },
+  { label: "Uptime", target: 99.9, suffix: "%", decimals: 1 },
 ];
 
-function ToolIcon({ icon, color }) {
-  if (icon === "zapier") {
-    return (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path d="M13 2 L5 14 H11 L10 22 L19 9 H13 L13 2Z" fill={color} />
-      </svg>
-    );
-  }
-  if (icon === "make") {
-    return (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 4-4 4"
-          stroke={color}
-          strokeWidth="2"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path
-          d="M16 12c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4"
-          stroke={color}
-          strokeWidth="2"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.5"
-        />
-        <circle cx="8" cy="12" r="1.6" fill={color} />
-        <circle cx="16" cy="12" r="1.6" fill={color} />
-      </svg>
-    );
-  }
-  // n8n — connected node cluster
+const BARS = [
+  { label: "Lead response time", value: 92 },
+  { label: "Manual work reduced", value: 87 },
+  { label: "Client satisfaction", value: 96 },
+];
+
+const LOG_EVENTS = [
+  "✓ New lead scored via Claude API",
+  "✓ FB Messenger reply sent automatically",
+  "→ Generating video with Vertex AI...",
+  "✓ Resume + proposal drafted",
+  "✓ Attachment logged to Drive",
+  "✓ Xero synced to Asana",
+  "✓ Post published to LinkedIn + FB",
+];
+
+function useCountUp(target, decimals = 0, duration = 1400) {
+  const [value, setValue] = useState(0);
+  const startRef = useRef(null);
+
+  useEffect(() => {
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReduced) {
+      setValue(target);
+      return;
+    }
+
+    let raf;
+    const step = (timestamp) => {
+      if (startRef.current === null) startRef.current = timestamp;
+      const elapsed = timestamp - startRef.current;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(target * eased);
+      if (progress < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration]);
+
+  return value.toFixed(decimals);
+}
+
+function StatTile({ stat }) {
+  const display = useCountUp(stat.target, stat.decimals || 0);
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <circle cx="5" cy="6" r="2.2" fill={color} />
-      <circle cx="5" cy="18" r="2.2" fill={color} />
-      <circle cx="19" cy="12" r="2.6" fill={color} />
-      <path d="M7 6h6a3 3 0 0 1 3 3" stroke={color} strokeWidth="1.5" fill="none" />
-      <path d="M7 18h6a3 3 0 0 0 3-3" stroke={color} strokeWidth="1.5" fill="none" />
-    </svg>
+    <div
+      style={{
+        flex: 1,
+        minWidth: 0,
+        background: "var(--bg)",
+        border: "1px solid var(--line)",
+        borderRadius: "10px",
+        padding: "14px 12px",
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "var(--font-display)",
+          fontWeight: 700,
+          fontSize: "22px",
+          color: "var(--text)",
+          lineHeight: 1.1,
+        }}
+      >
+        {display}
+        {stat.suffix}
+      </div>
+      <div
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "10.5px",
+          color: "var(--text-muted)",
+          marginTop: "4px",
+        }}
+      >
+        {stat.label}
+      </div>
+    </div>
   );
 }
 
-const ORBIT_DURATION = "26s";
+function ProgressBar({ bar, delay }) {
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    const t = setTimeout(() => setWidth(bar.value), 200 + delay);
+    return () => clearTimeout(t);
+  }, [bar.value, delay]);
+
+  return (
+    <div style={{ marginBottom: "12px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          fontFamily: "var(--font-mono)",
+          fontSize: "11px",
+          color: "var(--text-muted)",
+          marginBottom: "6px",
+        }}
+      >
+        <span>{bar.label}</span>
+        <span style={{ color: "var(--cyan)" }}>{bar.value}%</span>
+      </div>
+      <div
+        style={{
+          height: "6px",
+          borderRadius: "4px",
+          background: "var(--line)",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            height: "100%",
+            width: `${width}%`,
+            background: "linear-gradient(90deg, var(--cyan), var(--amber))",
+            borderRadius: "4px",
+            transition: "width 1.1s cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function HeroVisual() {
+  const [logIndex, setLogIndex] = useState(0);
+  const [visibleLogs, setVisibleLogs] = useState([LOG_EVENTS[0]]);
+
+  useEffect(() => {
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
+    const interval = setInterval(() => {
+      setLogIndex((i) => {
+        const next = (i + 1) % LOG_EVENTS.length;
+        setVisibleLogs((prev) => {
+          const updated = [...prev, LOG_EVENTS[next]];
+          return updated.slice(-4);
+        });
+        return next;
+      });
+    }, 2400);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="heroVisual">
+    <div style={{ width: "100%", maxWidth: "440px", margin: "0 auto" }}>
       <style>{`
-        @keyframes heroGlowSpin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+        @keyframes dashLivePulse {
+          0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+          50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
         }
-        @keyframes heroToolSpin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+        .dashLiveDot {
+          animation: dashLivePulse 2s ease-in-out infinite;
         }
-        @keyframes heroToolCounterSpin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(-360deg); }
+        @keyframes dashLogFadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        .heroOrbitRing {
-          animation: heroGlowSpin 40s linear infinite;
+        .dashLogLine {
+          animation: dashLogFadeIn 0.4s ease;
         }
-        .heroToolRing {
-          animation: heroToolSpin ${ORBIT_DURATION} linear infinite;
+        @keyframes dashGlowDrift {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); }
+          50% { transform: translate(-50%, -50%) scale(1.08); }
         }
-        .heroToolBadge {
-          animation: heroToolCounterSpin ${ORBIT_DURATION} linear infinite;
-        }
-        .heroVisual:hover .heroOrbitRing,
-        .heroVisual:hover .heroToolRing,
-        .heroVisual:hover .heroToolBadge {
-          animation-play-state: paused;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .heroOrbitRing,
-          .heroToolRing,
-          .heroToolBadge {
-            animation: none;
-          }
+        .dashGlow {
+          animation: dashGlowDrift 6s ease-in-out infinite;
         }
       `}</style>
 
-      <div className="heroOrbitInner">
-        {/* rotating gradient glow ring behind the portrait */}
+      <div style={{ position: "relative" }}>
         <div
-          className="heroGlow"
+          className="dashGlow"
           style={{
             position: "absolute",
             top: "50%",
             left: "50%",
-            width: "70%",
-            height: "70%",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            background: "conic-gradient(from 0deg, #f2a93b, #4fd1c5, #f2a93b)",
-            filter: "blur(10px)",
-            opacity: 0.45,
+            width: "90%",
+            height: "90%",
+            background:
+              "radial-gradient(circle, rgba(79,209,197,0.18), transparent 70%)",
+            filter: "blur(20px)",
+            zIndex: 0,
           }}
         />
 
-        {/* dashed orbit ring */}
         <div
-          className="heroOrbitRing"
           style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "50%",
-            border: "1px dashed rgba(242, 169, 59, 0.35)",
+            position: "relative",
+            zIndex: 1,
+            background: "var(--surface)",
+            border: "1px solid var(--line)",
+            borderRadius: "16px",
+            boxShadow: "0 24px 60px -20px rgba(0,0,0,0.6)",
+            overflow: "hidden",
           }}
-        />
-
-        {/* portrait */}
-        <div className="heroPortraitPos">
-          <div className="heroPortraitFrame">
-            <img src="/images/manuel.jpg" alt="Manuel Rebutido" className="heroPortrait" />
-          </div>
-        </div>
-
-        {/* orbiting tool icons: n8n, Zapier, Make */}
-        <div className="heroToolRing" style={{ position: "absolute", inset: 0 }}>
-          {TOOLS.map((tool) => (
+        >
+          {/* window chrome */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "12px 16px",
+              borderBottom: "1px solid var(--line)",
+            }}
+          >
+            <div style={{ display: "flex", gap: "6px" }}>
+              <span style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#ff5f57", display: "inline-block" }} />
+              <span style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#febc2e", display: "inline-block" }} />
+              <span style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#28c840", display: "inline-block" }} />
+            </div>
             <div
-              key={tool.label}
               style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: 0,
-                height: 0,
-                transform: `rotate(${tool.angle}deg) translateX(calc(var(--orbit-radius) + ${tool.radiusOffset}px))`,
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                fontFamily: "var(--font-mono)",
+                fontSize: "10.5px",
+                color: "var(--text-muted)",
+              }}
+            >
+              <span
+                className="dashLiveDot"
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  background: "#4ade80",
+                  display: "inline-block",
+                }}
+              />
+              LIVE
+            </div>
+          </div>
+
+          <div style={{ padding: "20px" }}>
+            {/* stat tiles */}
+            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+              {STATS.map((stat) => (
+                <StatTile stat={stat} key={stat.label} />
+              ))}
+            </div>
+
+            {/* progress bars */}
+            <div style={{ marginBottom: "20px" }}>
+              {BARS.map((bar, i) => (
+                <ProgressBar bar={bar} delay={i * 150} key={bar.label} />
+              ))}
+            </div>
+
+            {/* activity feed */}
+            <div
+              style={{
+                background: "var(--bg)",
+                border: "1px solid var(--line)",
+                borderRadius: "10px",
+                padding: "12px 14px",
+                minHeight: "112px",
               }}
             >
               <div
                 style={{
-                  position: "relative",
-                  transform: `translate(-50%, -50%) rotate(${-tool.angle}deg)`,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--amber)",
+                  marginBottom: "8px",
                 }}
               >
-                <div
-                  className="heroToolBadge"
-                  title={tool.label}
-                  style={{
-                    width: "var(--tool-size)",
-                    height: "var(--tool-size)",
-                    borderRadius: "50%",
-                    background: "var(--surface)",
-                    border: `2px solid ${tool.color}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: `0 0 12px ${tool.color}40`,
-                  }}
-                >
-                  <ToolIcon icon={tool.icon} color={tool.color} />
-                </div>
-                <span
-                  style={{
-                    position: "absolute",
-                    top: "calc(100% + 6px)",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "10px",
-                    letterSpacing: "0.04em",
-                    color: tool.color,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {tool.label}
-                </span>
+                Activity
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
+                {visibleLogs.map((line, i) => (
+                  <div
+                    className="dashLogLine"
+                    key={`${line}-${i}`}
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "11.5px",
+                      color: line.startsWith("→") ? "var(--cyan)" : "var(--text-muted)",
+                    }}
+                  >
+                    {line}
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+          </div>
         </div>
-
       </div>
     </div>
   );
