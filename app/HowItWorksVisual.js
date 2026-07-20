@@ -155,6 +155,21 @@ export default function HowItWorksVisual({ steps }) {
             }}
           />
 
+          {/* dashed guide track — exact radius the badge centers orbit on */}
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: `${RADIUS * 2}px`,
+              height: `${RADIUS * 2}px`,
+              transform: "translate(-50%, -50%)",
+              border: "1px dashed rgba(148,163,184,0.3)",
+              borderRadius: "50%",
+              zIndex: 1,
+            }}
+          />
+
           {/* photo */}
           <div
             style={{
