@@ -259,6 +259,7 @@ body {
 
 .hero {
   padding: 64px 0 96px;
+  overflow-x: hidden;
 }
 
 .heroGrid {
@@ -409,9 +410,9 @@ body {
 /* Hero visual */
 
 .heroVisual {
-  --orbit-size: 240px;
-  --orbit-radius: 94px;
-  --tool-size: 36px;
+  --orbit-size: 288px;
+  --orbit-radius: 144px;
+  --tool-size: 44px;
   position: relative;
   width: var(--orbit-size);
   height: var(--orbit-size);
@@ -420,17 +421,17 @@ body {
 
 @media (min-width: 480px) {
   .heroVisual {
-    --orbit-size: 280px;
-    --orbit-radius: 110px;
-    --tool-size: 42px;
+    --orbit-size: 336px;
+    --orbit-radius: 168px;
+    --tool-size: 50px;
   }
 }
 
 @media (min-width: 900px) {
   .heroVisual {
-    --orbit-size: 320px;
-    --orbit-radius: 126px;
-    --tool-size: 48px;
+    --orbit-size: 384px;
+    --orbit-radius: 192px;
+    --tool-size: 58px;
   }
 }
 
