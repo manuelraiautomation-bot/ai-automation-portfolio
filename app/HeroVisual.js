@@ -108,16 +108,12 @@ export default function HeroVisual() {
           }}
         />
 
-        {/* dashed orbit ring — sized to the outer edge of the badges, not their centers */}
+        {/* dashed orbit ring */}
         <div
           className="heroOrbitRing"
           style={{
             position: "absolute",
-            top: "50%",
-            left: "50%",
-            width: "calc(var(--orbit-radius) * 2 + var(--tool-size))",
-            height: "calc(var(--orbit-radius) * 2 + var(--tool-size))",
-            transform: "translate(-50%, -50%)",
+            inset: 0,
             borderRadius: "50%",
             border: "1px dashed rgba(242, 169, 59, 0.35)",
           }}
