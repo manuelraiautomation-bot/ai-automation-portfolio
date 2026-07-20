@@ -67,14 +67,25 @@ export default function HowItWorksVisual({ steps }) {
             align-items: center;
           }
         }
-        .orbitWrap { display: none; }
+        .orbitWrap {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-top: 32px;
+        }
         @media (min-width: 900px) {
           .orbitWrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-top: 0;
             position: sticky;
             top: 120px;
+          }
+        }
+        .orbitContainer {
+          transform: scale(0.75);
+        }
+        @media (min-width: 900px) {
+          .orbitContainer {
+            transform: scale(1);
           }
         }
         @keyframes orbitSpin {
