@@ -96,39 +96,104 @@ const caseStudies = [
   },
 ];
 
+const colors = {
+  bg: "#0b0f19",
+  card: "#131a2a",
+  border: "#232c3f",
+  borderHover: "#3a4762",
+  text: "#e2e8f0",
+  textDim: "#94a3b8",
+  accent: "#34d399",
+  badgeBg: "#1e293b",
+};
+
 export default function CaseStudyGallery() {
   const [active, setActive] = useState(null);
 
   return (
-    <section className="w-full">
-      <p className="text-emerald-400 text-xs tracking-widest font-mono mb-2">
+    <section style={{ width: "100%" }}>
+      <p
+        style={{
+          color: colors.accent,
+          fontSize: "12px",
+          letterSpacing: "2px",
+          fontFamily: "monospace",
+          marginBottom: "8px",
+        }}
+      >
         SELECTED WORK
       </p>
-      <h2 className="text-slate-300 mb-8">
+      <p style={{ color: colors.textDim, marginBottom: "32px" }}>
         Click any project to see the pain point it solved and the result.
-      </h2>
+      </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+          gap: "24px",
+        }}
+      >
         {caseStudies.map((cs) => (
           <button
             key={cs.id}
             onClick={() => setActive(cs)}
-            className="text-left bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-600 transition-colors"
+            style={{
+              textAlign: "left",
+              background: colors.card,
+              border: `1px solid ${colors.border}`,
+              borderRadius: "12px",
+              overflow: "hidden",
+              cursor: "pointer",
+              padding: 0,
+              display: "flex",
+              flexDirection: "column",
+              transition: "border-color 0.2s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.borderColor = colors.borderHover)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.borderColor = colors.border)
+            }
           >
-            <div className="relative h-36 w-full overflow-hidden">
+            <div style={{ position: "relative", height: "144px", width: "100%", overflow: "hidden" }}>
               <img
                 src={cs.image}
                 alt={cs.title}
-                className="w-full h-full object-cover object-top"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "top",
+                  display: "block",
+                }}
               />
-              <span className="absolute bottom-3 left-3 bg-slate-800/90 text-slate-300 text-[10px] tracking-wide font-mono px-2 py-1 rounded">
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: "12px",
+                  left: "12px",
+                  background: "rgba(30,41,59,0.9)",
+                  color: colors.textDim,
+                  fontSize: "10px",
+                  letterSpacing: "0.5px",
+                  fontFamily: "monospace",
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                }}
+              >
                 {cs.tags.join(" · ")}
               </span>
             </div>
-            <div className="p-4">
-              <h3 className="text-white font-semibold mb-1">{cs.title}</h3>
-              <p className="text-slate-400 text-sm mb-3">{cs.summary}</p>
-              <span className="text-emerald-400 text-sm font-mono">
+            <div style={{ padding: "16px" }}>
+              <h3 style={{ color: "#fff", fontWeight: 600, marginBottom: "6px", fontSize: "16px" }}>
+                {cs.title}
+              </h3>
+              <p style={{ color: colors.textDim, fontSize: "14px", marginBottom: "12px", lineHeight: 1.4 }}>
+                {cs.summary}
+              </p>
+              <span style={{ color: colors.accent, fontSize: "14px", fontFamily: "monospace" }}>
                 View case study →
               </span>
             </div>
@@ -138,50 +203,75 @@ export default function CaseStudyGallery() {
 
       {active && (
         <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50"
           onClick={() => setActive(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "16px",
+            zIndex: 50,
+          }}
         >
           <div
-            className="bg-slate-900 border border-slate-700 rounded-xl max-w-2xl w-full max-h-[85vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
+            style={{
+              background: colors.card,
+              border: `1px solid ${colors.border}`,
+              borderRadius: "12px",
+              maxWidth: "640px",
+              width: "100%",
+              maxHeight: "85vh",
+              overflowY: "auto",
+            }}
           >
             <img
               src={active.image}
               alt={active.title}
-              className="w-full h-48 object-cover object-top"
+              style={{ width: "100%", height: "192px", objectFit: "cover", objectPosition: "top" }}
             />
-            <div className="p-6">
-              <span className="text-slate-400 text-[10px] tracking-wide font-mono">
+            <div style={{ padding: "24px" }}>
+              <span style={{ color: colors.textDim, fontSize: "10px", letterSpacing: "0.5px", fontFamily: "monospace" }}>
                 {active.tags.join(" · ")}
               </span>
-              <h3 className="text-white text-xl font-semibold mt-2 mb-4">
+              <h3 style={{ color: "#fff", fontSize: "20px", fontWeight: 600, marginTop: "8px", marginBottom: "16px" }}>
                 {active.title}
               </h3>
 
-              <div className="space-y-4">
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 <div>
-                  <p className="text-emerald-400 text-xs font-mono tracking-wide mb-1">
+                  <p style={{ color: colors.accent, fontSize: "12px", fontFamily: "monospace", letterSpacing: "0.5px", marginBottom: "4px" }}>
                     THE PAIN
                   </p>
-                  <p className="text-slate-300 text-sm">{active.pain}</p>
+                  <p style={{ color: colors.text, fontSize: "14px", lineHeight: 1.5 }}>{active.pain}</p>
                 </div>
                 <div>
-                  <p className="text-emerald-400 text-xs font-mono tracking-wide mb-1">
+                  <p style={{ color: colors.accent, fontSize: "12px", fontFamily: "monospace", letterSpacing: "0.5px", marginBottom: "4px" }}>
                     WHAT I BUILT
                   </p>
-                  <p className="text-slate-300 text-sm">{active.build}</p>
+                  <p style={{ color: colors.text, fontSize: "14px", lineHeight: 1.5 }}>{active.build}</p>
                 </div>
                 <div>
-                  <p className="text-emerald-400 text-xs font-mono tracking-wide mb-1">
+                  <p style={{ color: colors.accent, fontSize: "12px", fontFamily: "monospace", letterSpacing: "0.5px", marginBottom: "4px" }}>
                     THE BENEFIT
                   </p>
-                  <p className="text-slate-300 text-sm">{active.benefit}</p>
+                  <p style={{ color: colors.text, fontSize: "14px", lineHeight: 1.5 }}>{active.benefit}</p>
                 </div>
               </div>
 
               <button
                 onClick={() => setActive(null)}
-                className="mt-6 text-slate-400 text-sm hover:text-white"
+                style={{
+                  marginTop: "24px",
+                  background: "none",
+                  border: "none",
+                  color: colors.textDim,
+                  fontSize: "14px",
+                  cursor: "pointer",
+                  padding: 0,
+                }}
               >
                 ← Back to gallery
               </button>
