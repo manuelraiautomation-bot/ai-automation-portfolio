@@ -1,99 +1,70 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-const NODE_POSITIONS = [
-  { x: 100, y: 60 },
-  { x: 100, y: 220 },
-  { x: 100, y: 380 },
-  { x: 100, y: 540 },
+const TOOLS = [
+  { label: "n8n", color: "#ea4b71", angle: 0 },
+  { label: "Make", color: "#6d00cc", angle: 90 },
+  { label: "Zapier", color: "#ff4a00", angle: 180 },
+  { label: "Gemini", color: "#1a73e8", angle: 270 },
 ];
 
-const PATH_D =
-  "M100,60 C150,130 50,150 100,220 C150,290 50,310 100,380 C150,450 50,470 100,540";
+const RADIUS = 120;
+const ORBIT_DURATION = "22s";
 
 export default function HowItWorksVisual({ steps }) {
-  const [active, setActive] = useState(0);
-  const [pathLength, setPathLength] = useState(0);
-  const stepRefs = useRef([]);
-  const progressPathRef = useRef(null);
-
-  useEffect(() => {
-    if (progressPathRef.current) {
-      setPathLength(progressPathRef.current.getTotalLength());
-    }
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Number(entry.target.dataset.stepIndex);
-            setActive(idx);
-          }
-        });
-      },
-      { root: null, rootMargin: "-35% 0px -45% 0px", threshold: 0 }
-    );
-    stepRefs.current.forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, [steps.length]);
-
-  const handleNodeClick = (i) => {
-    setActive(i);
-    stepRefs.current[i]?.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
-
-  const progress = (active + 1) / steps.length;
-  const dashOffset = pathLength ? pathLength * (1 - progress) : 0;
-
   return (
     <div className="howItWorksGrid" style={{ display: "block" }}>
       <style>{`
         @media (min-width: 900px) {
           .howItWorksGrid {
             display: grid !important;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr 320px;
             gap: 48px;
-            align-items: start;
+            align-items: center;
           }
         }
-        .flowVisualWrap { display: none; }
+        .orbitWrap { display: none; }
         @media (min-width: 900px) {
-          .flowVisualWrap {
-            display: block;
+          .orbitWrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: sticky;
             top: 120px;
           }
         }
-        @keyframes flowDash {
-          to { stroke-dashoffset: -24; }
+        @keyframes orbitSpin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
-        .flowAmbient {
-          animation: flowDash 1.2s linear infinite;
+        @keyframes counterSpin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(-360deg); }
         }
-        .flowProgress {
-          transition: stroke-dashoffset 0.6s ease;
+        @keyframes ringSpin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
-        .flowNode {
-          transition: fill 0.4s ease, stroke 0.4s ease, filter 0.4s ease;
-          cursor: pointer;
+        .orbitRing {
+          animation: orbitSpin ${ORBIT_DURATION} linear infinite;
         }
-        .flowNode:hover {
-          filter: brightness(1.2);
+        .orbitBadge {
+          animation: counterSpin ${ORBIT_DURATION} linear infinite;
+        }
+        .glowRing {
+          animation: ringSpin 10s linear infinite;
+        }
+        .orbitContainer:hover .orbitRing {
+          animation-play-state: paused;
+        }
+        .orbitContainer:hover .orbitBadge {
+          animation-play-state: paused;
         }
       `}</style>
 
       <div className="stepsPipeline">
         <div className="stepsPulse" aria-hidden="true" />
         {steps.map((step, i) => (
-          <div
-            className="stepItem"
-            key={step.title}
-            data-step-index={i}
-            ref={(el) => (stepRefs.current[i] = el)}
-          >
+          <div className="stepItem" key={step.title}>
             <div className="stepNumber">{String(i + 1).padStart(2, "0")}</div>
             <h3 className="stepTitle">{step.title}</h3>
             <p className="stepDesc">{step.desc}</p>
@@ -101,86 +72,111 @@ export default function HowItWorksVisual({ steps }) {
         ))}
       </div>
 
-      <div className="flowVisualWrap">
-        <svg
-          viewBox="0 0 200 600"
-          width="100%"
-          height="auto"
-          style={{ maxHeight: "520px" }}
+      <div className="orbitWrap">
+        <div
+          className="orbitContainer"
+          style={{
+            position: "relative",
+            width: "300px",
+            height: "300px",
+          }}
         >
-          <defs>
-            <pattern id="dotGrid" width="16" height="16" patternUnits="userSpaceOnUse">
-              <circle cx="1" cy="1" r="1" fill="#1e293b" />
-            </pattern>
-            <filter id="nodeGlow" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="4" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          <rect x="0" y="0" width="200" height="600" fill="url(#dotGrid)" />
-
-          {/* static base connector */}
-          <path d={PATH_D} fill="none" stroke="#232c3f" strokeWidth="2" />
-
-          {/* ambient always-moving dashed flow, like a running workflow */}
-          <path
-            d={PATH_D}
-            fill="none"
-            stroke="#34d399"
-            strokeOpacity="0.35"
-            strokeWidth="2"
-            strokeDasharray="6 6"
-            className="flowAmbient"
+          {/* rotating gradient glow ring behind photo */}
+          <div
+            className="glowRing"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: "180px",
+              height: "180px",
+              borderRadius: "50%",
+              transform: "translate(-50%, -50%)",
+              background:
+                "conic-gradient(from 0deg, #34d399, #f59e0b, #34d399)",
+              filter: "blur(6px)",
+              opacity: 0.6,
+            }}
           />
 
-          {/* progress fill synced to active step, like execution completing */}
-          <path
-            ref={progressPathRef}
-            d={PATH_D}
-            fill="none"
-            stroke="#34d399"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeDasharray={pathLength}
-            strokeDashoffset={dashOffset}
-            className="flowProgress"
-          />
+          {/* photo */}
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: "168px",
+              height: "168px",
+              borderRadius: "50%",
+              transform: "translate(-50%, -50%)",
+              overflow: "hidden",
+              border: "3px solid #0b0f19",
+              zIndex: 2,
+            }}
+          >
+            <img
+              src="/images/manuel.jpg"
+              alt="Manuel Rebutido"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </div>
 
-          {NODE_POSITIONS.map((pos, i) => {
-            const isActive = i <= active;
-            return (
-              <g
-                key={i}
-                onClick={() => handleNodeClick(i)}
-                className="flowNode"
-                filter={isActive ? "url(#nodeGlow)" : undefined}
+          {/* orbiting tool badges */}
+          <div
+            className="orbitRing"
+            style={{
+              position: "absolute",
+              inset: 0,
+            }}
+          >
+            {TOOLS.map((tool) => (
+              <div
+                key={tool.label}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  width: 0,
+                  height: 0,
+                  transform: `rotate(${tool.angle}deg) translateX(${RADIUS}px)`,
+                }}
               >
-                <circle
-                  cx={pos.x}
-                  cy={pos.y}
-                  r="16"
-                  fill={isActive ? "#0f2a22" : "#131a2a"}
-                  stroke={isActive ? "#34d399" : "#f59e0b"}
-                  strokeWidth="2"
-                />
-                <text
-                  x={pos.x}
-                  y={pos.y + 4}
-                  textAnchor="middle"
-                  fontSize="11"
-                  fontFamily="monospace"
-                  fill={isActive ? "#34d399" : "#f59e0b"}
+                <div
+                  className="orbitBadge"
+                  style={{
+                    transform: "translate(-50%, -50%)",
+                  }}
                 >
-                  {String(i + 1).padStart(2, "0")}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
+                  <div
+                    style={{
+                      width: "56px",
+                      height: "56px",
+                      borderRadius: "50%",
+                      background: "#131a2a",
+                      border: `2px solid ${tool.color}`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "10px",
+                      fontFamily: "monospace",
+                      color: tool.color,
+                      fontWeight: 700,
+                      letterSpacing: "0.3px",
+                      textAlign: "center",
+                      boxShadow: `0 0 12px ${tool.color}40`,
+                    }}
+                  >
+                    {tool.label}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
