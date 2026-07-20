@@ -1,4 +1,5 @@
 import CaseStudyGallery from "./CaseStudyGallery";
+import HowItWorksVisual from "./HowItWorksVisual";
 
 const PROFILE = {
   initials: "MR",
@@ -198,16 +199,7 @@ export default function Home() {
             <p className="eyebrow">Process</p>
             <h2 className="h2">How it works</h2>
             <p className="lead">A straightforward path from first call to a live system — no long onboarding, no guesswork.</p>
-            <div className="stepsPipeline">
-              <div className="stepsPulse" aria-hidden="true" />
-              {STEPS.map((step, i) => (
-                <div className="stepItem" key={step.title}>
-                  <div className="stepNumber">{String(i + 1).padStart(2, "0")}</div>
-                  <h3 className="stepTitle">{step.title}</h3>
-                  <p className="stepDesc">{step.desc}</p>
-                </div>
-              ))}
-            </div>
+            <HowItWorksVisual steps={STEPS} />
           </div>
         </div>
       </section>
