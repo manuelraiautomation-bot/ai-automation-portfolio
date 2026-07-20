@@ -1,11 +1,56 @@
 "use client";
 
 const TOOLS = [
-  { label: "n8n", color: "#ea4b71", angle: 0 },
-  { label: "Make", color: "#6d00cc", angle: 90 },
-  { label: "Zapier", color: "#ff4a00", angle: 180 },
-  { label: "Gemini", color: "#1a73e8", angle: 270 },
+  { label: "n8n", color: "#ea4b71", angle: 0, icon: "n8n" },
+  { label: "Zapier", color: "#ff4a00", angle: 120, icon: "zapier" },
+  { label: "Make", color: "#6d00cc", angle: 240, icon: "make" },
 ];
+
+function ToolIcon({ icon, color }) {
+  if (icon === "zapier") {
+    return (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M13 2 L5 14 H11 L10 22 L19 9 H13 L13 2Z"
+          fill={color}
+        />
+      </svg>
+    );
+  }
+  if (icon === "make") {
+    return (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 4-4 4"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+        />
+        <path
+          d="M16 12c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.5"
+        />
+        <circle cx="8" cy="12" r="1.6" fill={color} />
+        <circle cx="16" cy="12" r="1.6" fill={color} />
+      </svg>
+    );
+  }
+  // n8n — connected node cluster
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+      <circle cx="5" cy="6" r="2.2" fill={color} />
+      <circle cx="5" cy="18" r="2.2" fill={color} />
+      <circle cx="19" cy="12" r="2.6" fill={color} />
+      <path d="M7 6h6a3 3 0 0 1 3 3" stroke={color} strokeWidth="1.5" fill="none" />
+      <path d="M7 18h6a3 3 0 0 0 3-3" stroke={color} strokeWidth="1.5" fill="none" />
+    </svg>
+  );
+}
 
 const RADIUS = 120;
 const ORBIT_DURATION = "22s";
@@ -146,12 +191,12 @@ export default function HowItWorksVisual({ steps }) {
                 }}
               >
                 <div
-                  className="orbitBadge"
                   style={{
-                    transform: "translate(-50%, -50%)",
+                    transform: `translate(-50%, -50%) rotate(${-tool.angle}deg)`,
                   }}
                 >
                   <div
+                    className="orbitBadge"
                     style={{
                       width: "56px",
                       height: "56px",
@@ -161,16 +206,11 @@ export default function HowItWorksVisual({ steps }) {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: "10px",
-                      fontFamily: "monospace",
-                      color: tool.color,
-                      fontWeight: 700,
-                      letterSpacing: "0.3px",
-                      textAlign: "center",
                       boxShadow: `0 0 12px ${tool.color}40`,
                     }}
+                    title={tool.label}
                   >
-                    {tool.label}
+                    <ToolIcon icon={tool.icon} color={tool.color} />
                   </div>
                 </div>
               </div>
